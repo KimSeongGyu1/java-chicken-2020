@@ -1,4 +1,4 @@
-package domain;
+package domain.order;
 
 import domain.menu.Menu;
 import domain.order.Order;
@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DisplayName("주문 테스트")
 class OrderTest {
 
     @DisplayName("주문 테이블 확인")
@@ -41,10 +42,33 @@ class OrderTest {
         );
     }
 
-    @DisplayName("주문 기본 가격 확인")
-    @Test
-    void orderPriceTest() {
-        Order order = new Order(1, 1, 2);
-        assertThat(order.calculatePrice(new CardDiscountStrategy())).isEqualTo(32000);
+    @DisplayName("카드 주문 가격 확인")
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("cardPriceParams")
+    void orderCardPriceTest(String message, int amount, int expected) {
+        Order order = new Order(1, 1, amount);
+        assertThat(order.calculatePrice(new CardDiscountStrategy())).isEqualTo(expected);
+    }
+
+    static Stream<Arguments> cardPriceParams() {
+        return Stream.of(
+                Arguments.of("치킨만 10마리 이하", 5, 80000),
+                Arguments.of("치킨 10마리 이상", 10, 150000)
+        );
+    }
+
+    @DisplayName("현금 주문 가격 확인")
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("cachePriceParams")
+    void orderCachePriceTest(String message, int amount, int expected) {
+        Order order = new Order(1, 1, amount);
+        assertThat(order.calculatePrice(new CacheDiscountStrategy())).isEqualTo(expected);
+    }
+
+    static Stream<Arguments> cachePriceParams() {
+        return Stream.of(
+                Arguments.of("치킨만 10마리 이하", 5, 76000),
+                Arguments.of("치킨 10마리 이상", 10, 142500)
+        );
     }
 }
