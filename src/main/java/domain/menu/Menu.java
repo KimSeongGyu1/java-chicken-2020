@@ -1,4 +1,4 @@
-package domain;
+package domain.menu;
 
 public class Menu {
     private final int number;
@@ -25,7 +25,11 @@ public class Menu {
         return this.number == number;
     }
 
-    public int calculatePrice(final int amount) {
+    public boolean isChickenMenu() {
+        return category == Category.CHICKEN;
+    }
+
+    public int calculateManyPrice(final int amount) {
         return price * amount;
     }
 
