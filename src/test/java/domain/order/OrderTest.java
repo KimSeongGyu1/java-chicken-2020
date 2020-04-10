@@ -1,7 +1,6 @@
 package domain.order;
 
 import domain.menu.Menu;
-import domain.order.Order;
 import domain.order.discountstrategy.CacheDiscountStrategy;
 import domain.order.discountstrategy.CardDiscountStrategy;
 import domain.table.Table;
@@ -10,12 +9,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("주문 테스트")
 class OrderTest {
@@ -23,7 +21,7 @@ class OrderTest {
     @DisplayName("주문 테이블 확인")
     @Test
     void orderTableTest() {
-        Order order = new Order(1, 1, 2);
+        Order order = new Order(Table.of(1), Menu.of(1), 2);
         assertThat(order.isOrderOf(Table.of(1))).isTrue();
     }
 
@@ -31,7 +29,7 @@ class OrderTest {
     @ParameterizedTest(name = "{0}")
     @MethodSource("isChickenParams")
     void orderMenuTest(String message, int menuNumber, boolean isChicken) {
-        Order order = new Order(1, menuNumber, 2);
+        Order order = new Order(Table.of(1), Menu.of(menuNumber), 2);
         assertThat(order.isChickenOrder()).isEqualTo(isChicken);
     }
 
@@ -46,7 +44,7 @@ class OrderTest {
     @ParameterizedTest(name = "{0}")
     @MethodSource("cardPriceParams")
     void orderCardPriceTest(String message, int amount, int expected) {
-        Order order = new Order(1, 1, amount);
+        Order order = new Order(Table.of(1), Menu.of(1), amount);
         assertThat(order.calculatePrice(new CardDiscountStrategy())).isEqualTo(expected);
     }
 
@@ -61,7 +59,7 @@ class OrderTest {
     @ParameterizedTest(name = "{0}")
     @MethodSource("cachePriceParams")
     void orderCachePriceTest(String message, int amount, int expected) {
-        Order order = new Order(1, 1, amount);
+        Order order = new Order(Table.of(1), Menu.of(1), amount);
         assertThat(order.calculatePrice(new CacheDiscountStrategy())).isEqualTo(expected);
     }
 
@@ -70,5 +68,13 @@ class OrderTest {
                 Arguments.of("치킨만 10마리 이하", 5, 76000),
                 Arguments.of("치킨 10마리 이상", 10, 142500)
         );
+    }
+
+    @DisplayName("수량 합치기 테스트")
+    @Test
+    void sumUpTest() {
+        Order order = new Order(Table.of(1), Menu.of(1), 50);
+
+        assertThatThrownBy(() -> order.sumUpIfSame(order)).isInstanceOf(IllegalArgumentException.class);
     }
 }

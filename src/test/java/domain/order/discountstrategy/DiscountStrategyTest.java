@@ -1,6 +1,8 @@
 package domain.order.discountstrategy;
 
+import domain.menu.Menu;
 import domain.order.Order;
+import domain.table.Table;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,7 +21,7 @@ class DiscountStrategyTest {
     @MethodSource("chickenDiscountParams")
     void calculateDiscountAmount(String message, int menuNumber, int amount, double expected) {
         DiscountStrategy discountStrategy = new CacheDiscountStrategy();
-        Order order = new Order(1, menuNumber, amount);
+        Order order = new Order(Table.of(1), Menu.of(menuNumber), amount);
         assertThat(discountStrategy.calculateDiscountAmount(order)).isEqualTo(expected);
     }
 
