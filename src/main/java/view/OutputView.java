@@ -84,18 +84,4 @@ public class OutputView {
         System.out.println("## 최종 결제할 금액");
         System.out.println(price);
     }
-
-    private static void printLine(final String line, final int count) {
-        for (int index = 0; index < count; index++) {
-            System.out.print(line);
-        }
-        System.out.println();
-    }
-
-    private static void printTableNumbers(final List<Table> tables) {
-        for (final Table table : tables) {
-            System.out.printf(TABLE_FORMAT, table);
-        }
-        System.out.println();
-    }
 }

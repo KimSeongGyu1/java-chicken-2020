@@ -45,32 +45,29 @@ public class Application {
     }
 
     private static void order(PossMachine possMachine) {
-        OutputView.printTables(TableRepository.tables(), possMachine);
-        Table table = selectTable();
+        Table table = selectTable(possMachine);
 
         OutputView.printMenus(MenuRepository.menus());
-
         Menu menu = selectMenu();
 
-        int amount = InputView.inputAmount();
-        Order order = new Order(table, menu, amount);
+        Order order = new Order(table, menu, InputView.inputAmount());
         possMachine.takeOrder(order);
     }
 
     private static int pay(PossMachine possMachine) {
-        OutputView.printTables(TableRepository.tables(), possMachine);
-        Table table = selectTable();
+        Table table = selectTable(possMachine);
 
         OutputView.printOrders(possMachine.showOrders(table));
-        CardCache cardCache = CardCache.of(InputView.inputCardOrCache(table));
 
+        CardCache cardCache = CardCache.of(InputView.inputCardOrCache(table));
         if (cardCache == CardCache.CARD) {
             return possMachine.pay(table, new CardDiscountStrategy());
         }
         return possMachine.pay(table, new CacheDiscountStrategy());
     }
 
-    private static Table selectTable() {
+    private static Table selectTable(PossMachine possMachine) {
+        OutputView.printTables(TableRepository.tables(), possMachine);
         return Table.of(InputView.inputTableNumber());
     }
 
