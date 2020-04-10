@@ -35,7 +35,7 @@ public class Order {
     }
 
     public boolean isOrderOf(final Table table) {
-        return table.equals(table);
+        return this.table.equals(table);
     }
 
     public boolean isChickenOrder() {

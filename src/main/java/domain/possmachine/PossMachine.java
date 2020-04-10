@@ -1,13 +1,14 @@
 package domain.possmachine;
 
 import domain.order.Order;
+import domain.table.Table;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class PossMachine {
-    private List<Order> orders = new ArrayList<>();
+    public List<Order> orders = new ArrayList<>();
 
     public PossMachine() {
     }
@@ -28,5 +29,10 @@ public class PossMachine {
         return orders.stream()
                 .filter(order -> order.equals(newOrder))
                 .findAny();
+    }
+
+    public boolean isOrdered(Table table) {
+        return orders.stream()
+                .anyMatch(order -> order.isOrderOf(table));
     }
 }

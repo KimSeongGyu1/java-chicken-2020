@@ -17,7 +17,7 @@ public class Table {
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 테이블 번호입니다."));
     }
 
-    public boolean isTableOf(final int number) {
+    private boolean isTableOf(final int number) {
         return this.number == number;
     }
 
