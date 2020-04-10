@@ -13,6 +13,22 @@ public class Menu {
         this.price = price;
     }
 
+    public static Menu of(final int number) {
+        return MenuRepository.menus()
+                .stream()
+                .filter(menu -> menu.isMenuOf(number))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 메뉴 번호입니다."));
+    }
+
+    public boolean isMenuOf(final int number) {
+        return this.number == number;
+    }
+
+    public int calculatePrice(final int amount) {
+        return price * amount;
+    }
+
     @Override
     public String toString() {
         return category + " " + number + " - " + name + " : " + price + "원";
