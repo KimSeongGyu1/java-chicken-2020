@@ -57,6 +57,14 @@ public class Order {
         return menu.calculateManyPrice(amount);
     }
 
+    public Menu getMenu() {
+        return menu;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
